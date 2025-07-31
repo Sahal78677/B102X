@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Climate Change AI Assistant</title>
   <link rel="stylesheet" href="styles.css">
+  <script defer src="script.js"></script>
 </head>
 <body>
   <div class="container">
@@ -15,7 +16,7 @@
       <div id="chat-box"></div>
       <div class="input-area">
         <input type="text" id="user-input" placeholder="Type your question..." />
-        <button id="send-btn">🚀 Send</button>
+        <button onclick="sendMessage()">🚀 Send</button>
       </div>
     </div>
 
@@ -23,46 +24,35 @@
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const sendBtn = document.getElementById("send-btn");
-      const input = document.getElementById("user-input");
-      const chatBox = document.getElementById("chat-box");
+    function sendMessage() {
+      const input = document.getElementById('user-input');
+      const query = input.value.trim();
 
-      function sendMessage() {
-        const message = input.value.trim();
-        if (message === "") return;
+      if (!query) return;
 
-        // ✅ Send user input to Google Sheets
-        fetch("https://script.google.com/macros/s/AKfycbxCl4HdMDjFQ62NBjlLkPhcXNJPoqEbqLAWu6a6v4uERtORuUSw6oqe1zXpNB9fR6s/exec", {
-          method: "POST",
-          body: new URLSearchParams({ query: message }),
-          mode: "no-cors"
-        });
+      // Append user's message to chat-box
+      const chatBox = document.getElementById('chat-box');
+      const userMsg = document.createElement('div');
+      userMsg.textContent = "You: " + query;
+      chatBox.appendChild(userMsg);
 
-        // 🗨️ Show user message
-        const userMsg = document.createElement("div");
-        userMsg.className = "user-message";
-        userMsg.textContent = "You: " + message;
-        chatBox.appendChild(userMsg);
+      // OPTIONAL: Simulate bot reply
+      const botMsg = document.createElement('div');
+      botMsg.textContent = "Bot: (AI response simulated)";
+      chatBox.appendChild(botMsg);
 
-        chatBox.scrollTop = chatBox.scrollHeight;
-        input.value = "";
+      // Log query to Google Sheet
+      const params = new URLSearchParams();
+      params.append("search", query);
 
-        // 🤖 Simulated AI response
-        setTimeout(() => {
-          const aiMsg = document.createElement("div");
-          aiMsg.className = "ai-message";
-          aiMsg.textContent = "AI: This is a placeholder response about climate change.";
-          chatBox.appendChild(aiMsg);
-          chatBox.scrollTop = chatBox.scrollHeight;
-        }, 600);
-      }
-
-      sendBtn.addEventListener("click", sendMessage);
-      input.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") sendMessage();
+      fetch("https://script.google.com/macros/s/AKfycbxCl4HdMDjFQ62NBjlLkPhcXNJPoqEbqLAWu6a6v4uERtORuUSw6oqe1zXpNB9fR6s/exec", {
+        method: "POST",
+        body: params,
+        mode: "no-cors"
       });
-    });
+
+      input.value = ""; // Clear input
+    }
   </script>
 </body>
 </html>
