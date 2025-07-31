@@ -1,68 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Climate Change AI Assistant</title>
-    <link rel="stylesheet" href="styles.css">
-    <script defer src="script.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Climate Change AI Assistant</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>🌍 Climate Change AI Assistant</h1>
-        <p>Ask the AI anything about climate change and get AI-powered insights.</p>
-        
-        <div class="chat-container">
-            <div id="chat-box"></div>
-            <div class="input-area">
-                <input type="text" id="user-input" placeholder="Type your question..." />
-                <button id="send-btn">🚀 Send</button>
-            </div>
-        </div>
+  <div class="container">
+    <h1>🌍 Climate Change AI Assistant</h1>
+    <p>Ask the AI anything about climate change and get AI-powered insights.</p>
 
-        <footer>Built with ❤️</footer>
+    <div class="chat-container">
+      <div id="chat-box"></div>
+      <div class="input-area">
+        <input type="text" id="user-input" placeholder="Type your question..." />
+        <button id="send-btn">🚀 Send</button>
+      </div>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const sendBtn = document.getElementById("send-btn");
-            const input = document.getElementById("user-input");
-            const chatBox = document.getElementById("chat-box");
+    <footer>Built with ❤️</footer>
+  </div>
 
-            function sendMessage() {
-                const message = input.value.trim();
-                if (message === "") return;
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const sendBtn = document.getElementById("send-btn");
+      const input = document.getElementById("user-input");
+      const chatBox = document.getElementById("chat-box");
 
-                // Log the query for tracking
-                console.log("User searched:", message);
+      function sendMessage() {
+        const message = input.value.trim();
+        if (message === "") return;
 
-                // Display user's message
-                const userMsg = document.createElement("div");
-                userMsg.className = "user-message";
-                userMsg.textContent = "You: " + message;
-                chatBox.appendChild(userMsg);
-
-                // Scroll to bottom
-                chatBox.scrollTop = chatBox.scrollHeight;
-
-                // Clear input
-                input.value = "";
-
-                // Simulated AI response
-                setTimeout(() => {
-                    const aiMsg = document.createElement("div");
-                    aiMsg.className = "ai-message";
-                    aiMsg.textContent = "AI: This is a placeholder response about climate change.";
-                    chatBox.appendChild(aiMsg);
-                    chatBox.scrollTop = chatBox.scrollHeight;
-                }, 500);
-            }
-
-            sendBtn.addEventListener("click", sendMessage);
-            input.addEventListener("keypress", (e) => {
-                if (e.key === "Enter") sendMessage();
-            });
+        // ✅ Send user input to Google Sheets
+        fetch("https://script.google.com/macros/s/AKfycbxCl4HdMDjFQ62NBjlLkPhcXNJPoqEbqLAWu6a6v4uERtORuUSw6oqe1zXpNB9fR6s/exec", {
+          method: "POST",
+          body: new URLSearchParams({ query: message }),
+          mode: "no-cors"
         });
-    </script>
+
+        // 🗨️ Show user message
+        const userMsg = document.createElement("div");
+        userMsg.className = "user-message";
+        userMsg.textContent = "You: " + message;
+        chatBox.appendChild(userMsg);
+
+        chatBox.scrollTop = chatBox.scrollHeight;
+        input.value = "";
+
+        // 🤖 Simulated AI response
+        setTimeout(() => {
+          const aiMsg = document.createElement("div");
+          aiMsg.className = "ai-message";
+          aiMsg.textContent = "AI: This is a placeholder response about climate change.";
+          chatBox.appendChild(aiMsg);
+          chatBox.scrollTop = chatBox.scrollHeight;
+        }, 600);
+      }
+
+      sendBtn.addEventListener("click", sendMessage);
+      input.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") sendMessage();
+      });
+    });
+  </script>
 </body>
 </html>
