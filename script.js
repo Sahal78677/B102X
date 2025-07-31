@@ -6,15 +6,18 @@ document.getElementById("user-input").addEventListener("keydown", function (even
 });
 
 async function sendMessage() {
-    const API_KEY = "hj3yALqNaLNKIm8E8a0aJ5S7eudjLCtbPrNcs4yj"; // Replace with your key
+    const API_KEY = "hj3yALqNaLNKIm8E8a0aJ5S7eudjLCtbPrNcs4yj"; // Replace with your real key
     const userInput = document.getElementById("user-input").value.trim();
-    
+
     if (!userInput) {
         alert("Please enter a question!");
         return;
     }
 
     displayMessage(userInput, "You");
+
+    // 🔽 Log user input to Google Sheets
+    logSearchToSheet(userInput);
 
     try {
         const response = await fetch("https://api.cohere.ai/v1/generate", {
@@ -55,4 +58,22 @@ function displayMessage(text, sender, type = "normal") {
     messageElement.innerHTML = `<strong>${sender}:</strong> ${text}`;
     chatBox.appendChild(messageElement);
     chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// ✅ Function to log user input to Google Sheet via Apps Script
+function logSearchToSheet(searchText) {
+    fetch("https://script.google.com/macros/s/AKfycbxCl4HdMDjFQ62NBjlLkPhcXNJPoqEbqLAWu6a6v4uERtORuUSw6oqe1zXpNB9fR6s/exec", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `search=${encodeURIComponent(searchText)}`
+    })
+    .then(response => response.text())
+    .then(result => {
+        console.log("Logged to sheet:", result);
+    })
+    .catch(error => {
+        console.error("Error logging to sheet:", error);
+    });
 }
